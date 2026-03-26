@@ -1,12 +1,13 @@
 import express from "express";
 import { PORT } from "./configs/serverConfig.js";
 import { connectDB } from "./configs/dbConfig.js";
-import botCommandHandler from "./botCommandHandler.js";
-import { launchBot } from "./configs/botConfig.js";
+import v1Router from "./routes/index.js";
+
 
 const app = express();
 
-botCommandHandler();
+
+app.use('/api', v1Router);
 
 app.listen(PORT, async () => {
     try {
