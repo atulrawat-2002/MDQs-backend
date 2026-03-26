@@ -2,6 +2,7 @@
   "name": "mdqs",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env src/index.js"
   },
