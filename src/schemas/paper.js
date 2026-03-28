@@ -1,18 +1,21 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const paperSchema = new Schema({
 
-    course: {
-        type: String,
+    courseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Course'
     },
-    subject: {
-        type: String,
-        required: true
+    subjectId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Subject'
     },
-    semester: {
-        type: Number,
-        enum: [1, 2, 3, 4, 5, 6],
-        required: true
+    semesterId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Semester',
     },
     files: [
         {
