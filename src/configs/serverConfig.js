@@ -1,3 +1,7 @@
+import { configDotenv } from "dotenv";
+
+configDotenv();
+
 export const PORT = process.env.PORT;
 
 export const DB_URI = process.env.DB_URI;

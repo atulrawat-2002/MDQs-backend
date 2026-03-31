@@ -9,8 +9,12 @@ import { subjectHandler } from "./handlers/actionHandlers/subjectHandler.js";
 import { session } from "telegraf";
 import { browseHandler } from "./handlers/actionHandlers/browseHandler.js";
 import downloadAction from "./handlers/actionHandlers/downloadAction.js";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 bot.use(session());
+
 
 const app = express();
 

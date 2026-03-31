@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { config } from "dotenv";
+import { configDotenv } from "dotenv";
 
-config(); // Load environment variables from .env file
+configDotenv(); // Load environment variables from .env file
 
 export async function connectDB() {
     try {
