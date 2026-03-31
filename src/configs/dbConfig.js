@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
-import { DB_URI } from "./serverConfig.js";
+import { config } from "dotenv";
+
+config(); // Load environment variables from .env file
 
 export async function connectDB() {
     try {
-        
-        await mongoose.connect(DB_URI);
+        console.log(process.env.DB_URI);
+        await mongoose.connect(process.env.DB_URI);
         console.log('Connected to database')
 
     } catch (error) {

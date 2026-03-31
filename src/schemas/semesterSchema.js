@@ -1,19 +1,20 @@
 import mongoose, { model, Schema } from "mongoose";
 
 const semesterSchema = new Schema({
-    number: {
-        type: Number,
-        required: true
-    },
-    subjectId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Subject"
-    }
-})
+  number: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 6
+  },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "course"
+  }
+}, { timestamps: true });
 
+semesterSchema.index({ number: 1, courseId: 1 }, { unique: true });
 
-const Semeser = model("subject", semesterSchema);
-
-
-export default Semeser;
+const Semester = model("semester", semesterSchema);
+export default Semester;
