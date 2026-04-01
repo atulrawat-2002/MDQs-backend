@@ -30,7 +30,7 @@ export function courseHandler(bot) {
         Markup.button.callback(`Semester ${sem.number}`, `upload_sem:${sem._id}`)
       );
 
-      await ctx.reply("📅 Choose a semester:", Markup.inlineKeyboard(buttons, { columns: 2 }));
+      await ctx.reply("Choose a semester:", Markup.inlineKeyboard(buttons, { columns: 2 }));
 
     } catch (err) {
       console.error(err);
@@ -64,7 +64,13 @@ export function courseHandler(bot) {
         Markup.button.callback(s.name, `upload_subject:${s._id}`)
       );
 
-      await ctx.reply("📖 Choose a subject:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+      await ctx.reply("Choose a subject:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+      await ctx.reply(
+            "Not found your Subject?",
+            Markup.inlineKeyboard([
+              Markup.button.callback("Request To Add", "REQUEST_SUBJECT")
+            ], { columns: 1 })
+      );
 
     } catch (err) {
       console.error(err);

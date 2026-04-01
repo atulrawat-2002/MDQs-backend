@@ -31,7 +31,7 @@ export function browseHandler(bot) {
         Markup.button.callback(`Semester ${sem.number}`, `browse_sem:${sem._id}`)
       );
 
-      await ctx.reply("📅 Choose a semester:", Markup.inlineKeyboard(buttons, { columns: 2 }));
+      await ctx.reply("Choose a semester:", Markup.inlineKeyboard(buttons, { columns: 2 }));
 
     } catch (err) {
       console.error(err);
@@ -65,7 +65,13 @@ export function browseHandler(bot) {
         Markup.button.callback(s.name, `browse_subject:${s._id}`)
       );
 
-      await ctx.reply("📖 Choose a subject:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+      await ctx.reply("Choose a subject:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+      await ctx.reply(
+                  "Not found your Subject?",
+                  Markup.inlineKeyboard([
+                    Markup.button.callback("Request To Add", "REQUEST_SUBJECT")
+                  ], { columns: 1 })
+      );
 
     } catch (err) {
       console.error(err);
@@ -91,7 +97,10 @@ export function browseHandler(bot) {
       });
 
       if (!paper || !paper.files.length) {
-        return ctx.reply("📭 No files found for this subject yet.");
+        return await ctx.reply("No files found for this subject yet.",
+          Markup.inlineKeyboard([
+                      Markup.button.callback("Report To Admin", "REQUEST_File")
+                    ], { columns: 1 }));
       }
 
       // ✅ Summary message

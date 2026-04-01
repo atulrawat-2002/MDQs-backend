@@ -12,7 +12,13 @@ export default async function downloadAction(ctx) {
       Markup.button.callback(c.name, `browse_course:${c._id}`)
     );
 
-    await ctx.reply("📚 Choose a course to browse:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+    await ctx.reply("Choose a course to browse:", Markup.inlineKeyboard(buttons, { columns: 1 }));
+    await ctx.reply(
+      "Not found your course?",
+      Markup.inlineKeyboard([
+        Markup.button.callback("Send Request To Add", "REQUEST_COURSE")
+      ], { columns: 1 })
+    );
 
   } catch (err) {
     console.error(err);
