@@ -117,7 +117,7 @@ export function browseHandler(bot) {
 
       // ✅ Summary message
       await ctx.reply(
-        `📚 Files for:\n\n` +
+        `Files for:\n\n` +
           `Course   : ${ctx.session.browseCourseName}\n` +
           `Semester : ${ctx.session.browseSemNumber}\n` +
           `Subject  : ${subject.name}\n\n` +
@@ -137,7 +137,7 @@ export function browseHandler(bot) {
           } else if (file.fileType === "image") {
             await ctx.replyWithPhoto(
               { url: file.url },
-              { caption: `🖼️ ${subject.name}` },
+              { caption: `${subject.name}` },
             );
           }
         } catch (fileErr) {

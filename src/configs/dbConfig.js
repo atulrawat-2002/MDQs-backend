@@ -5,7 +5,6 @@ configDotenv(); // Load environment variables from .env file
 
 export async function connectDB() {
     try {
-        console.log(process.env.DB_URI);
         await mongoose.connect(process.env.DB_URI);
         console.log('Connected to database')
 

@@ -69,7 +69,7 @@ export function subjectHandler(bot) {
         if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
           return ctx.reply(
             `❌ File type not allowed.\n\n` +
-              `📁 Only these types are accepted:\n` +
+              `Only these types are accepted:\n` +
               `• PDF (.pdf)\n` +
               `• Image (.jpg, .png, .webp)\n\n` +
               `Please send a valid file.`,
