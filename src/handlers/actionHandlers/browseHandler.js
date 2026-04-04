@@ -4,9 +4,10 @@ import Semester from "../../schemas/semesterSchema.js";
 import Paper from "../../schemas/paperSchema.js";
 import Subject from "../../schemas/subjectSchema.js";
 import Course from "../../schemas/courseSchema.js";
+import { getSignedUrl } from "../../utils/cloudinaryMethods.js";
+import axios from "axios";
 
 export function browseHandler(bot) {
-
   // STEP 1 — User picks a course → show semesters
   bot.action(/^browse_course:(.+)$/, async (ctx) => {
     const courseId = ctx.match[1];
@@ -20,19 +21,24 @@ export function browseHandler(bot) {
       ctx.session.browseCourseName = course.name;
 
       const semesters = await Semester.find({
-        courseId: new mongoose.Types.ObjectId(courseId)
+        courseId: new mongoose.Types.ObjectId(courseId),
       }).sort({ number: 1 });
 
       if (!semesters.length) {
         return ctx.reply("No semesters found for this course.");
       }
 
-      const buttons = semesters.map(sem =>
-        Markup.button.callback(`Semester ${sem.number}`, `browse_sem:${sem._id}`)
+      const buttons = semesters.map((sem) =>
+        Markup.button.callback(
+          `Semester ${sem.number}`,
+          `browse_sem:${sem._id}`,
+        ),
       );
 
-      await ctx.reply("Choose a semester:", Markup.inlineKeyboard(buttons, { columns: 2 }));
-
+      await ctx.reply(
+        "Choose a semester:",
+        Markup.inlineKeyboard(buttons, { columns: 2 }),
+      );
     } catch (err) {
       console.error(err);
       await ctx.reply("Error fetching semesters.");
@@ -54,25 +60,28 @@ export function browseHandler(bot) {
       // ✅ Direct query using semesterId
       const subjects = await Subject.find({
         courseId: new mongoose.Types.ObjectId(ctx.session.browseCourseId),
-        semesterId: new mongoose.Types.ObjectId(semesterId)
+        semesterId: new mongoose.Types.ObjectId(semesterId),
       });
 
       if (!subjects.length) {
         return ctx.reply("No subjects found for this semester.");
       }
 
-      const buttons = subjects.map(s =>
-        Markup.button.callback(s.name, `browse_subject:${s._id}`)
+      const buttons = subjects.map((s) =>
+        Markup.button.callback(s.name, `browse_subject:${s._id}`),
       );
 
-      await ctx.reply("Choose a subject:", Markup.inlineKeyboard(buttons, { columns: 1 }));
       await ctx.reply(
-                  "Not found your Subject?",
-                  Markup.inlineKeyboard([
-                    Markup.button.callback("Request To Add", "REQUEST_SUBJECT")
-                  ], { columns: 1 })
+        "Choose a subject:",
+        Markup.inlineKeyboard(buttons, { columns: 1 }),
       );
-
+      await ctx.reply(
+        "Not found your Subject?",
+        Markup.inlineKeyboard(
+          [Markup.button.callback("Request To Add", "REQUEST_SUBJECT")],
+          { columns: 1 },
+        ),
+      );
     } catch (err) {
       console.error(err);
       await ctx.reply("Error fetching subjects.");
@@ -97,39 +106,38 @@ export function browseHandler(bot) {
       });
 
       if (!paper || !paper.files.length) {
-        return await ctx.reply("No files found for this subject yet.",
-          Markup.inlineKeyboard([
-                      Markup.button.callback("Report To Admin", "REQUEST_File")
-                    ], { columns: 1 }));
+        return await ctx.reply(
+          "No files found for this subject yet.",
+          Markup.inlineKeyboard(
+            [Markup.button.callback("Report To Admin", "REQUEST_File")],
+            { columns: 1 },
+          ),
+        );
       }
 
       // ✅ Summary message
       await ctx.reply(
         `📚 Files for:\n\n` +
-        `Course   : ${ctx.session.browseCourseName}\n` +
-        `Semester : ${ctx.session.browseSemNumber}\n` +
-        `Subject  : ${subject.name}\n\n` +
-        `📦 Total files: ${paper.files.length}\n` +
-        `Sending now...`
+          `Course   : ${ctx.session.browseCourseName}\n` +
+          `Semester : ${ctx.session.browseSemNumber}\n` +
+          `Subject  : ${subject.name}\n\n` +
+          `📦 Total files: ${paper.files.length}\n` +
+          `Sending now...`,
       );
 
       // ✅ Dump all files
       for (const file of paper.files) {
         try {
           if (file.fileType === "pdf") {
+            // ✅ URL is now public — send directly
             await ctx.replyWithDocument(
-              { url: file.url },
-              { caption: `📄 ${subject.name}`, filename: `${subject.name}.pdf` }
+              { url: file.publicId, filename: `${subject.name}.pdf` },
+              { caption: `📄 ${subject.name}` },
             );
           } else if (file.fileType === "image") {
             await ctx.replyWithPhoto(
               { url: file.url },
-              { caption: `🖼️ ${subject.name}` }
-            );
-          } else {
-            await ctx.replyWithDocument(
-              { url: file.url },
-              { caption: `📎 ${subject.name}` }
+              { caption: `🖼️ ${subject.name}` },
             );
           }
         } catch (fileErr) {
@@ -145,7 +153,6 @@ export function browseHandler(bot) {
       ctx.session.browseCourseName = null;
       ctx.session.browseSemNumber = null;
       ctx.session.browseSemesterId = null;
-
     } catch (err) {
       console.error(err);
       await ctx.reply("❌ Error fetching files.");

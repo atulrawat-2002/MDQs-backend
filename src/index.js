@@ -10,13 +10,16 @@ import { session } from "telegraf";
 import { browseHandler } from "./handlers/actionHandlers/browseHandler.js";
 import downloadAction from "./handlers/actionHandlers/downloadAction.js";
 import { configDotenv } from "dotenv";
+import { requestHandler } from "./utils/requestHandler.js";
+import cors from "cors";
 
 configDotenv();
 
 bot.use(session());
 
-
 const app = express();
+
+app.use(cors());
 
 bot.start((ctx) => startHandler(ctx));
 
@@ -29,6 +32,8 @@ courseHandler(bot);
 subjectHandler(bot);
 
 browseHandler(bot);
+
+requestHandler(bot);
 
 app.listen(PORT, async () => {
     try {
