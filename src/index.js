@@ -35,24 +35,6 @@ browseHandler(bot);
 
 requestHandler(bot);
 
-async function pingSlack() {
-    try {
-        const response = await fetch('https://slack-clone-backend-82w6.onrender.com/ping');
-        const data = await response.json();
-        console.log("Response from slack", data)
-    } catch (error) {
-        console.log('Slack ping error ', error.message);
-    }
-}
-
-setInterval(async () => {
-    try {
-        await pingSlack()
-    } catch (error) {
-        console.log("Error slack ping interval", error.message);
-    }
-}, 1000 * 60 * 10);
-
 app.get('/ping', (req, res) => {
     res.status(200).json({
         message: "Bot is up"
